@@ -14,6 +14,8 @@ string token(string s){
         for(int j = 0; j < s.size(); j++){
             //cout << s.size() << endl;
             cout << s.at(j) << endl;
+            if(s.at(j) == '_')
+                
             if(s.at(j) == '"')
                 ++counter;
             if(s.at(j) == token[i] && counter != 1){
