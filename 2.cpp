@@ -573,7 +573,7 @@ cout << "----------------------------------- PART 2 ----------------------------
     else cout << "Error opening file";
     text.close();
 
-    bool b = trace(table, s); // change str to s later
+    bool b = trace(table, s);
     cout << "----------------------------------------\n";
     
     if(b==true){
@@ -582,5 +582,4 @@ cout << "----------------------------------- PART 2 ----------------------------
     } 
     else cout << "rejected";
     cout << endl;
-
 }
