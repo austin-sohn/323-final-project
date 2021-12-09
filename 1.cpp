@@ -1,10 +1,10 @@
 #include <iostream>
 #include <string>
-#include <vector>
 #include <fstream>
-#include <algorithm>
+#include <stack>
 using namespace std;
 
+// --------------- PART 1 -----------------
 // adds spaces before and after tokens
 string remove_space(string s){
     string newstr = "";
@@ -15,13 +15,45 @@ string remove_space(string s){
     }
     return newstr;
 }
+
+// gets rid of comments
+string comment(string s){
+    int pos;
+    string newstr = "";
+    int counter = 0;
+    while(pos >= 0){
+        pos = s.find("**");
+        if(counter == 0){
+            if(s.at(0) != '\n')
+                newstr += s.substr(0, pos);
+            if(newstr.at(newstr.length() - 1) != '\n')
+                newstr+='\n';
+        }
+        s = s.substr(pos+3, s.length());
+        counter++;
+        if (counter == 2){
+            counter = 0;
+        }
+    }
+    return newstr;
+}
+
+// adds space before and after token
 string token(string s){
     char token[8] = {',','=',';',':','(',')','+','*'};
+    string res[6] = {"program", "var", "begin", "end.", "integer", "write"};
     int len = sizeof(token)/sizeof(token[0]);
-    string newstr, temp;
+    int len2 = sizeof(res)/sizeof(res[0]);
+    string newstr;
     int counter = 0;
     bool b = false;
 
+    for(int i = 0; i < len2; i++){
+        //cout << s.substr(s.find(res[i]) + res[i].length(), s.length());
+        s = s.substr(0,s.find(res[i]) + res[i].length()) + " " + s.substr(s.find(res[i]) + res[i].length(), s.length());
+        //s = newstr;
+    }
+    cout << s;
     for(int i = 0; i < s.size()+1; i++){
         if(b == true){
             newstr.push_back(' ');
@@ -49,67 +81,28 @@ string token(string s){
     return newstr;
 }
 
-// gets rid of comments
-string comment(string s){
-    int pos = s.find("**");
-    string newstr;
-    if(pos == -1){
-        return s;
-    }
-    else if(pos >= 0 && (pos == s.size()-2)){
-        newstr = "";
-    }
-    else{
-        newstr = s.substr(0, pos);
-    }
-    return newstr;
-}
-
-bool check_error(){
-
-    return false;
-}
 
 int main(){
-    string line;
-    vector<string> v;
+    string line, newstr;
     ifstream finalp1 ("finalp1.txt");
     ofstream finalp2 ("finalp2.txt");
 
-    string res[6] = {"program", "var", "begin", "end.", "integer", "write"};
-    bool error = true;
-
     if (finalp1.is_open()){
         while (getline(finalp1,line)){
-            line = remove_space(line);
-            line = comment(line);
-            if(line != ""){
-                line = token(line);
-                v.push_back(line);
+            newstr += line + '\n';
+            
             }
-        }
+        newstr = remove_space(newstr);
+        newstr = comment(newstr);
+        newstr = token(newstr);
         finalp1.close();
     }
+
     else cout << "Error opening file";
-    
-    for(int i = 0; i < v.size(); i++){
-        finalp2 << v.at(i) << endl;
-    }
+
+    newstr = newstr.substr(0, newstr.find("end.") + 4);
+    newstr.push_back(' ');
+    finalp2 << newstr;
     finalp2.close();
-    error = check_error();
-    if(error == false){
-        cout << "#include <iostream>\n";
-        cout << "using namespace std;\n";
-        cout << "int main()\n";
-        cout << "{\n";
-        for(int i = 0; i < v.size(); i++){
-            cout << "\t" << v.at(i) << endl;
-        }
-        cout << "\treturn 0;\n";
-        cout << "}\n";
-    }
-    else{
-        cout << "There was an error\n";
-    }
-    
+
 }
