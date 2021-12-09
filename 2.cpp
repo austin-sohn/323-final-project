@@ -17,7 +17,6 @@ stack<string> popmult(stack<string> st, int amt){
         st.pop();
     }
     cout << endl;
-    cout << "amt:" << amt << endl;
     return st;
 }
 
@@ -370,26 +369,18 @@ string get_col(string s){
 }
 
 bool trace(vector<vector<string>> t, string readWord){
-    string read,go2,top = "0";
+    string read,go2,num,top = "0";
     vector<string> res = {"program", "var", "begin", "end.", "integer", "write"};
-    char c = '0', temp;
-    int col;
+    char c = '0';
+    int col, numtop;
     stack<string> st;
     st.push(top);
-    int counter = 0;
     cout << "push:0\n";
-    string num;
-    int numtop;
+
     bool b = true;
     while(go2 != "acc"){
         if(b == true){  
             read = readWord.substr(0, readWord.find(" "));
-            if(read == "$"){
-                cout << "ah\n";
-            }
-            if(read == "end."){
-                cout << "ah\n";
-            }
             if(find(res.begin(), res.end(), read) != res.end()){
                 readWord = readWord.substr(readWord.find(" ")+1, readWord.length()); 
             }
@@ -411,22 +402,15 @@ bool trace(vector<vector<string>> t, string readWord){
         if(str_digit(top))
             numtop = stoi(top);
         st.pop();
-    
-        if(read == "\""){
-            cout << "s\n";
-        }
         cout << "read:" << read << endl;
         col = string_to_col_num(read);
-        cout << "col:" << col << endl;
         go2 = go(t,numtop,col);
-        cout << "go2:" << go2 << endl;
         num = go2.substr(1,go2.length());
         c = go2.at(0);
 
         if(c=='r'){
             string nt;
             st.push(top);
-            cout << "in r:\n";
             if(str_digit(num)){
                 int count = get_count(num) * 2;
                 st = popmult(st, count);
@@ -439,7 +423,6 @@ bool trace(vector<vector<string>> t, string readWord){
             cout << "pop:" << top << endl;
             nt = get_col(num);
             col = string_to_col_num(nt);
-            cout << numtop << " " << col << endl;
             go2 = go(t,numtop,col);
             st.push(top);
             st.push(nt);
@@ -449,7 +432,6 @@ bool trace(vector<vector<string>> t, string readWord){
             b = false;    
         }
         if (c=='s'){
-            cout << "in s:\n";
             st.push(top);
             st.push(read);
             st.push(num);
@@ -458,7 +440,6 @@ bool trace(vector<vector<string>> t, string readWord){
             b = true;
         }
         if(c!='s' && c!='r'){
-            cout << "in else:\n";
             st.push(top);
             st.push(read);
             st.push(num);
@@ -468,9 +449,7 @@ bool trace(vector<vector<string>> t, string readWord){
         }
         showStack(st);
         if(go2 == "") return false;
-
     }
-
     return true;
 }
 
@@ -560,6 +539,7 @@ int main(){
     {"","","","","","","","","","","","","","","","","","","","","r17","r17","r17","r17","r17","r17","","","","r17","","r17","","","","","","","","","","","","","","","","","","","","",},
     {"","","","","","","","","","","","","","","","","","","s82","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",},
     {"","","","","","","","","","","","","","","","","","","","","r16","r16","r16","r16","r16","r16","","","","r16","","r16","","","","","","","","","","","","","","","","","","","","",}};
+
 cout << "----------------------------------- PART 2 --------------------------------\n";
     if (text.is_open()){
         while (getline(text,line)){
