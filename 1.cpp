@@ -48,6 +48,7 @@ string token(string s){
     int counter = 0;
     bool b = false;
 
+cout << "----------------------------------- PART 1 --------------------------------\n";
     for(int i = 0; i < len2; i++){
         //cout << s.substr(s.find(res[i]) + res[i].length(), s.length());
         s = s.substr(0,s.find(res[i]) + res[i].length()) + " " + s.substr(s.find(res[i]) + res[i].length(), s.length());
